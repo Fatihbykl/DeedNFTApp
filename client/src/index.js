@@ -1,14 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { TransactionsProvider } from './contexts/context';
+import Navbar from './components/Navbar';
 
 ReactDOM.render(
   <React.StrictMode>
     <TransactionsProvider>
-      <App />
+      <BrowserRouter>
+        <Navbar />
+        <App />
+      </BrowserRouter>
     </TransactionsProvider>
   </React.StrictMode>,
   document.getElementById('root')

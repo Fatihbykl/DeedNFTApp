@@ -11,7 +11,7 @@ const createContract = () => {
     const web3 = new Web3(ethereum);
     const netID = web3.eth.net.getId();
     const contractAddress = DeedNFT.networks[netID];
-    const contract = new web3.eth.Contract(DeedNFT.abi, contractAddress);
+    const contract = new web3.eth.Contract(DeedNFT.abi, "0xd790031fc41a56586704f8cFcd4CaD9Dcd8E493c");
     console.log(contract);
     return contract;
 }
@@ -51,11 +51,10 @@ export const TransactionsProvider = ({ children }) => {
         }
     }
 
-    const mintNFT = async () => {
+    const mintNFT = async (province, county, district, area, coordinates) => {
         try {
             const contract = createContract();
-            console.log(contract);
-            await contract.methods.mint().call({from: currentAccount});
+            await contract.methods.mint(province, area, county, district, coordinates).send({from: currentAccount});
             console.log("Minted NFT!");
         } catch (error) {
             console.log("Error on minting -> ", error);
@@ -65,11 +64,17 @@ export const TransactionsProvider = ({ children }) => {
     const buildImage = async () => {
         try {
             const contract = createContract();
-            const image = await contract.methods.buildImage().call({from: currentAccount});
+            const image = await contract.methods.buildImage(2).call({from: currentAccount});
+            console.log(image);
             return image;
         } catch (error) {
             console.log("Error on build image -> ", error);
         }
+    }
+
+    const handleChange = (province, county, district, area, coordinates) => {
+        console.log(province, county, district, area, coordinates);
+        mintNFT(province, county, district, area, coordinates);
     }
 
     useEffect(() => {
@@ -85,6 +90,7 @@ export const TransactionsProvider = ({ children }) => {
               connectWallet,
               mintNFT,
               buildImage,
+              handleChange,
           }}
         >{ children }</TransactionContext.Provider>
     );
