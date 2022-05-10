@@ -2,8 +2,8 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "../node_modules/@openzeppelin/contracts/utils/Strings.sol";
 import "./Base64.sol";
 
 contract DeedNFT is ERC721Enumerable {
@@ -21,10 +21,16 @@ contract DeedNFT is ERC721Enumerable {
   }
 
   address contractOwner;
+  address marketContract;
   mapping (uint256 => TitleDeed) public allTitleDeeds;
   
   constructor() ERC721("Title Deed NFT", "DNFT") {
     contractOwner = msg.sender;
+  }
+
+  function setMarketContract(address _address) public {
+    require(marketContract == address(0), "You can set market contract only once!");
+    marketContract = _address;
   }
 
   function mint(
@@ -50,15 +56,12 @@ contract DeedNFT is ERC721Enumerable {
     
     allTitleDeeds[supply + 1] = newDeed;
     _safeMint(msg.sender, supply + 1);
+    setApprovalForAll(marketContract, true);
   }
 
   modifier onlyOwner() {
     require(msg.sender == contractOwner, "You are not owner!");
     _;
-  }
-
-  function approve(address _to, uint256 _tokenId) override public {
-      _approve(_to, _tokenId);
   }
 
   function updateDeedForSale(uint256 _tokenId, uint256 _price, bool _forSale, address _sender) public {

@@ -12,14 +12,14 @@ const web3 = require("web3");
 const createContract = () => {
     const web3 = new Web3(ethereum);
     web3.eth.handleRevert = true;
-    const contract = new web3.eth.Contract(DeedNFT.abi, "0xe45297bC4EC27727B0328B445986E0F4734e6FaA");
+    const contract = new web3.eth.Contract(DeedNFT.abi, "0x4e2607aEEC39B7115Ef5012641991238B89C0efB");
     return contract;
 }
 
 const createSaleContract = () => {
     const web3 = new Web3(ethereum);
     web3.eth.handleRevert = true;
-    const contract = new web3.eth.Contract(DeedSale.abi, "0xd7311f60Fc5d4f861d2525E5f8316657F4789d36");
+    const contract = new web3.eth.Contract(DeedSale.abi, "0x40B0847c6f32d8a6056f608dE7F1DA2D81Be17E4");
     return contract;
 }
 

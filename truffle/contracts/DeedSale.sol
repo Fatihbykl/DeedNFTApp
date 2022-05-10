@@ -5,15 +5,15 @@ import "./DeedNFT.sol";
 
 contract DeedSale {
 
-    DeedNFT public contractRef;
+  DeedNFT public contractRef;
 
-    constructor(DeedNFT _address) {
-        contractRef = _address;
-    }
+  constructor(DeedNFT _address) {
+    contractRef = _address;
+    contractRef.setMarketContract(address(this));
+  }
 
-    function putOnSale(uint256 _tokenId, uint256 _price) public {
-    contractRef.updateDeedForSale(_tokenId, _price, true, msg.sender);
-    contractRef.approve(address(this), _tokenId);
+  function putOnSale(uint256 _tokenId, uint256 _price) public {
+    contractRef.updateDeedForSale(_tokenId, _price, true, msg.sender);    
     // event
   }
 
