@@ -18,6 +18,14 @@ a {
   text-decoration: none !important;
 }
 
+.d-block {
+  display: block !important;
+}
+
+.d-none {
+  display: none !important;
+}
+
 .container {
   width: 1170px !important;
   position: relative;

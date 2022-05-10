@@ -14,7 +14,7 @@ function CreateDeed() {
         <div className="container">
             <form action="" onSubmit={(e) => {e.preventDefault(); handleChange(province, county, district, area, coordinates)}}>
                 <div class="form-group">
-                    <h2 class="heading">Booking & contact</h2>
+                    <h2 class="heading">Create Title Deed</h2>
                     <div class="controls">
                         <input placeholder="Province" type="text" class="floatLabel" name="province" onChange={e => setProvince(e.target.value)} />
                     </div>

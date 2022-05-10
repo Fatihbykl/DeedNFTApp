@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import DeedNFT from '../abis/DeedNFT.json';
+import DeedSale from '../abis/DeedSale.json'
 
 export const TransactionContext = React.createContext("");
 
 const { ethereum } = window;
+
 const web3 = require("web3");
 
 const createContract = () => {
     const web3 = new Web3(ethereum);
-    const netID = web3.eth.net.getId();
-    const contractAddress = DeedNFT.networks[netID];
-    const contract = new web3.eth.Contract(DeedNFT.abi, "0xd790031fc41a56586704f8cFcd4CaD9Dcd8E493c");
-    console.log(contract);
+    web3.eth.handleRevert = true;
+    const contract = new web3.eth.Contract(DeedNFT.abi, "0xe45297bC4EC27727B0328B445986E0F4734e6FaA");
+    return contract;
+}
+
+const createSaleContract = () => {
+    const web3 = new Web3(ethereum);
+    web3.eth.handleRevert = true;
+    const contract = new web3.eth.Contract(DeedSale.abi, "0xd7311f60Fc5d4f861d2525E5f8316657F4789d36");
     return contract;
 }
 
@@ -61,14 +68,51 @@ export const TransactionsProvider = ({ children }) => {
         }
     }
 
-    const buildImage = async () => {
-        try {
+    const buildImage = async (id) => {
+        try { 
             const contract = createContract();
-            const image = await contract.methods.buildImage(2).call({from: currentAccount});
-            console.log(image);
+            const image = await contract.methods.buildImage(id).call({from: currentAccount});
             return image;
         } catch (error) {
             console.log("Error on build image -> ", error);
+            return false;
+        }
+    }
+
+    const putOnSale = async (id) => {
+        try {
+            const contract = createSaleContract();
+            await contract.methods.putOnSale(id, web3.utils.toWei("0.1", "ether")).send({from: currentAccount});
+        } catch (error) {
+            console.log("Error on putOnSale -> ", error);
+        }
+    }
+
+    const removeFromSale = async (id) => {
+        try {
+            const contract = createSaleContract();
+            await contract.methods.removeFromSale(id).send({from: currentAccount});
+        } catch (error) {
+            console.log("Error on removeFromSale -> ", error);
+        }
+    }
+
+    const buyTitleDeed = async (id, price) => {
+        try {
+            const contract = createSaleContract();
+            await contract.methods.buyTitleDeed(id).send({from: currentAccount, value: price });
+        } catch (error) {
+            console.log("Error on buyTitleDeed -> ", error);
+        }
+    }
+
+    const getDeed = async (id) => {
+        try {
+            const contract = createContract();
+            let result = await contract.methods.getDeed(id).call({from: currentAccount});
+            return result;
+        } catch (error) {
+            console.log("Error on getDeed -> ", error);
         }
     }
 
@@ -90,6 +134,10 @@ export const TransactionsProvider = ({ children }) => {
               connectWallet,
               mintNFT,
               buildImage,
+              putOnSale,
+              removeFromSale,
+              buyTitleDeed,
+              getDeed,
               handleChange,
           }}
         >{ children }</TransactionContext.Provider>
