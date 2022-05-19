@@ -8,18 +8,20 @@ export const TransactionContext = React.createContext("");
 const { ethereum } = window;
 
 const web3 = require("web3");
+const DEED_NFT_ADDRESS = "0x14Dd9b68ad1a50E785b1a7AEcC78B360edFBDf4c";
+const DEED_SALE_ADDRESS = "0xce19B7d08BA3d2a0e3c4b0589916e5617aE07Ff4"
 
 const createContract = () => {
     const web3 = new Web3(ethereum);
     web3.eth.handleRevert = true;
-    const contract = new web3.eth.Contract(DeedNFT.abi, "0x4e2607aEEC39B7115Ef5012641991238B89C0efB");
+    const contract = new web3.eth.Contract(DeedNFT.abi, DEED_NFT_ADDRESS);
     return contract;
 }
 
 const createSaleContract = () => {
     const web3 = new Web3(ethereum);
     web3.eth.handleRevert = true;
-    const contract = new web3.eth.Contract(DeedSale.abi, "0x40B0847c6f32d8a6056f608dE7F1DA2D81Be17E4");
+    const contract = new web3.eth.Contract(DeedSale.abi, DEED_SALE_ADDRESS);
     return contract;
 }
 
@@ -79,10 +81,10 @@ export const TransactionsProvider = ({ children }) => {
         }
     }
 
-    const putOnSale = async (id) => {
+    const putOnSale = async (id, price) => {
         try {
             const contract = createSaleContract();
-            await contract.methods.putOnSale(id, web3.utils.toWei("0.1", "ether")).send({from: currentAccount});
+            await contract.methods.putOnSale(id, web3.utils.toWei(price, "ether")).send({from: currentAccount});
         } catch (error) {
             console.log("Error on putOnSale -> ", error);
         }
@@ -116,6 +118,51 @@ export const TransactionsProvider = ({ children }) => {
         }
     }
 
+    const getPastTransactions = async (id) => {
+        try {
+            const contract = createSaleContract();
+            const events = await contract.getPastEvents('BuyTitleDeed', {
+                filter: { _tokenId: id },
+                fromBlock: 0,
+                toBlock: 'latest'
+            })
+            return events;
+        } catch (error) {
+            console.log("Error on getPastTransactions -> ", error);
+        }
+    }
+
+    const getUserDeeds = async () => {
+        try {
+            const contract = createContract();
+            const balance = await contract.methods.balanceOfAdress(currentAccount).call({from: currentAccount});
+            console.log(balance);
+            let imgs = [];
+            let ids = [];
+            for (let index = 0; index < balance; index++) {
+                var id = await contract.methods.tokenOfOwner(currentAccount, index).call({from: currentAccount})
+                var img = await buildImage(id);
+                
+                img = "data:image/svg+xml;base64," + img;
+                
+                imgs.push(img);
+                ids.push(id);
+            }
+            return [imgs, ids];
+        } catch (error) {
+            console.log("Error on getUserDeeds -> ", error);
+        }
+    }
+
+    const approveToken = async (id) => {
+        try {
+            const contract = createContract();
+            await contract.methods.approveToken(DEED_SALE_ADDRESS, id).send({from: currentAccount});
+        } catch (error) {
+            console.log("Error on approveToken -> ", error);
+        }
+    }
+
     const handleChange = (province, county, district, area, coordinates) => {
         console.log(province, county, district, area, coordinates);
         mintNFT(province, county, district, area, coordinates);
@@ -139,6 +186,9 @@ export const TransactionsProvider = ({ children }) => {
               buyTitleDeed,
               getDeed,
               handleChange,
+              getPastTransactions,
+              getUserDeeds,
+              approveToken,
           }}
         >{ children }</TransactionContext.Provider>
     );

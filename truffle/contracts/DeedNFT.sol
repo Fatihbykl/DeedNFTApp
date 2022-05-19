@@ -67,13 +67,25 @@ contract DeedNFT is ERC721Enumerable {
   function updateDeedForSale(uint256 _tokenId, uint256 _price, bool _forSale, address _sender) public {
     require(_exists(_tokenId), "Token id not exists!");
     require(ownerOf(_tokenId) == _sender, "You must be owner of the nft!");
-    
+
     TitleDeed storage deed = allTitleDeeds[_tokenId];
     deed.price = _price;
     deed.forSale = _forSale;
   }
 
-  function buyTitleDeed(uint256 _tokenId, address _sender, uint256 _value) public returns(address) { // msg sender kullanıcı olduğu için hata veriyor
+  function balanceOfAdress(address _address) public view returns(uint256){
+    return balanceOf(_address);
+  }
+
+  function tokenOfOwner(address _address, uint256 _index) public view returns(uint256){
+    return tokenOfOwnerByIndex(_address, _index);
+  }
+
+  function approveToken(address _to, uint256 _tokenId) public {
+    approve(_to, _tokenId);
+  }
+
+  function buyTitleDeed(uint256 _tokenId, address _sender, uint256 _value) public returns(address) {
     require(_sender != address(0), "Wrong address!");
     require(_exists(_tokenId), "Token id not exists!");
     address deedOwner = ownerOf(_tokenId);
@@ -86,7 +98,7 @@ contract DeedNFT is ERC721Enumerable {
     transferFrom(deedOwner, _sender, _tokenId);
     deed.owner = _sender;
     deed.forSale = false;
-    // event onceki sahip, sonraki sahip, timestamp, price vs.
+    
     return deedOwner;
   }
 
@@ -99,27 +111,21 @@ contract DeedNFT is ERC721Enumerable {
       TitleDeed memory currentDeed = allTitleDeeds[_tokenId];
       return Base64.encode(bytes(
           abi.encodePacked(
-              '<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">',
-              '<rect fill="hsl(120, 100%, 60%)" x="0" y="0" width="300" height="50"/>',
-              '<rect fill="hsl(220, 100%, 60%)" y="50" width="300" height="170"/>',
-              '<text x="79.52084" y="32.31707" font-size="24" font-family="Courier New, monospace" font-weight="bold">TAPU SENED\xc4\xb0</text>',
-              '<text x="7" y="85.38211" font-size="13" font-family="Courier New, monospace" font-weight="bold">Tapu No:</text>',
-              '<text x="95.33333" y="85.86992" font-size="13" font-family="Courier New, monospace" font-weight="bold">', Strings.toString(currentDeed.ID),'</text>',
-              '<text x="7" y="105.82113" font-size="13" font-family="Courier New, monospace" font-weight="bold">\xc4\xb0l:</text>',
-              '<text x="95.33333" y="105.82113" font-size="13" font-family="Courier New, monospace" font-weight="bold">', currentDeed.province,'</text>',
-              '<text x="7" y="125.82113" font-size="13" font-family="Courier New, monospace" font-weight="bold">\xc4\xb0l\xc3\xa7e:</text>',
-              '<text x="95.33333" y="125.82113" font-size="13" font-family="Courier New, monospace" font-weight="bold">', currentDeed.county,'</text>',
-              '<text x="7" y="145.8645" font-size="13" font-family="Courier New, monospace" font-weight="bold">Mahalle:</text>',
-              '<text x="95.33333" y="145.82113" font-size="13" font-family="Courier New, monospace" font-weight="bold">', currentDeed.district,'</text>',
-              '<text x="7" y="166.33333" font-size="13" font-family="Courier New, monospace" font-weight="bold">Y\xc3\xbcz\xc3\xb6l\xc3\xa7\xc3\xbcm\xc3\xbc:</text>',
-              '<text x="95.33333" y="166.33333" font-size="13" font-family="Courier New, monospace" font-weight="bold">', currentDeed.area,'</text>',
-              '<text x="7" y="186.33333" font-size="13" font-family="Courier New, monospace" font-weight="bold">Koordinat:</text>',
-              '<text x="95.33333" y="186.33333" font-size="13" font-family="Courier New, monospace" font-weight="bold">', currentDeed.coordinates,'</text>',
-              '<rect fill="hsl(312, 100%, 60%)" y="220" width="300" height="80"/>',
-              '<text x="7" y="240.2439" font-size="13" font-family="Courier New, monospace" font-weight="bold">Sahibi:</text>',
-              '<text x="7" y="260.4878" font-size="13" font-family="Courier New, monospace" font-weight="bold">0x0000000000000000000000000000</text>',
-              '<text x="7" y="280.4878" font-size="13" font-family="Courier New, monospace" font-weight="bold">Fatih Baykal</text>',
-              '</svg>'
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 281 361"><defs><style>.cls-1,.cls-3{fill:#fff;}.cls-1,.cls-2{stroke:#000;}.cls-2{fill:#66f;stroke-width:0.5px;}.cls-3,.cls-4,.cls-5{isolation:isolate;}.cls-3{font-size:20px;letter-spacing:0.1em;}.cls-3,.cls-4{font-family:CourierNewPS-BoldMT, Courier New;font-weight:700;}.cls-4{font-size:12px;}.cls-5{font-size:10px;font-family:CourierNewPSMT, Courier New;}</style></defs>',
+              '<g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="VXpKABHdU6NmqH3AM5dyw"><path class="cls-1" d="M.5.5h280v360H.5Z"/></g><g id="HzKt7qGHsrj7QkSaeZZ9B"><path class="cls-2" d="M4.45,5.9h271.6V79.7H4.45Z"/></g>',
+              '<text class="cls-3" transform="translate(70.27 48.67)">TITLE DEED</text>',
+              '<g><text class="cls-4" transform="translate(20.38 112.81)">DEED ID</text></g>',
+              '<g><text class="cls-4" transform="translate(20.38 153.04)">PROVINCE</text></g>',
+              '<g><text class="cls-4" transform="translate(20.38 193.27)">COUNTY</text></g>',
+              '<g><text class="cls-4" transform="translate(20.38 233.49)">DISTRICT</text></g>',
+              '<g><text class="cls-4" transform="translate(20.63 273.72)">AREA</text></g>',
+              '<g><text class="cls-4" transform="translate(20.38 313.95)">COORDINATES</text></g>',
+              '<g><text class="cls-5" transform="translate(120.75 153.04)">', currentDeed.province ,'</text></g>',
+              '<g><text class="cls-5" transform="translate(120.75 193.27)">', currentDeed.county ,'</text></g>',
+              '<g><text class="cls-5" transform="translate(120.75 233.49)">', currentDeed.district ,'</text></g>',
+              '<g><text class="cls-5" transform="translate(120.75 273.72)">', currentDeed.area ,'</text></g>',
+              '<g><text class="cls-5" transform="translate(120.75 313.95)">', currentDeed.coordinates ,'</text></g>',
+              '<g><text class="cls-5" transform="translate(120.75 112.81)">', Strings.toString(currentDeed.ID) ,'</text></g></g></g></svg>'
           )
       ));
   }

@@ -28,6 +28,9 @@ function Navbar() {
                     <li>
                         <NavLink to="search" activeClassName="active">Search</NavLink>
                     </li>
+                    <li>
+                        <NavLink to="mydeeds" activeClassName="active">My Deeds</NavLink>
+                    </li>
                 </ul>
                 </div>
             </div>
