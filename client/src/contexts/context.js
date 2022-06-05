@@ -8,8 +8,8 @@ export const TransactionContext = React.createContext("");
 const { ethereum } = window;
 
 const web3 = require("web3");
-const DEED_NFT_ADDRESS = "0x14Dd9b68ad1a50E785b1a7AEcC78B360edFBDf4c";
-const DEED_SALE_ADDRESS = "0xce19B7d08BA3d2a0e3c4b0589916e5617aE07Ff4"
+const DEED_NFT_ADDRESS = "0x6604bc181bb23BCff6A9f790ACF65A88fff6d394";
+const DEED_SALE_ADDRESS = "0x4925221c2ada1d9d0CD6A9EaB63ec4A19C9C75e4"
 
 const createContract = () => {
     const web3 = new Web3(ethereum);

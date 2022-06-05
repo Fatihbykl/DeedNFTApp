@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Courier-New", sans-serif !important;
   font-size: 16px;
 	line-height: 24px;
 	font-weight: 400;
@@ -154,6 +154,7 @@ a {
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
+  font-weight: bold;
 }
 @media (max-width: 768px) {
   .navbar .navbar-menu .navbar-nav {
@@ -242,8 +243,8 @@ h2.heading {
   text-transform: uppercase;
   font-weight: 300;
   text-align: left;
-  color: #506982;
-  border-bottom: 1px solid #424250;
+  color: #3c4250;
+  border-bottom: 1px solid #3c4250;
   padding-bottom: 3px;
   margin-bottom: 20px;
   margin-top: 50px;
@@ -267,7 +268,7 @@ h2.heading {
   width: 100%;
   margin-bottom: 18px;
   color: #424250;
-  font-family: 'Poppins', 'sans-serif';
+  font-family: 'Courier-New', 'sans-serif';
   font-size: 16px;
   font-weight: 300;
   -moz-border-radius: 2px;

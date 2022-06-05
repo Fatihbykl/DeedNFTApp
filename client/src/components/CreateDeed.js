@@ -16,22 +16,22 @@ function CreateDeed() {
                 <div class="form-group">
                     <h2 class="heading">Create Title Deed</h2>
                     <div class="controls">
-                        <input placeholder="Province" type="text" class="floatLabel" name="province" onChange={e => setProvince(e.target.value)} />
+                        <input id="search-bar" placeholder="Province" type="text" className="floatLabel mb-3" name="province" onChange={e => setProvince(e.target.value)} />
                     </div>
                     <div class="controls">
-                        <input placeholder="County" type="text" class="floatLabel" name="county" onChange={e => setCounty(e.target.value)} />
+                        <input id="search-bar" placeholder="County" type="text" className="floatLabel mb-3" name="county" onChange={e => setCounty(e.target.value)} />
                     </div>       
                     <div class="controls">
-                        <input placeholder="District" type="text" class="floatLabel" name="district" onChange={e => setDistrict(e.target.value)} />
+                        <input id="search-bar" placeholder="District" type="text" className="floatLabel mb-3" name="district" onChange={e => setDistrict(e.target.value)} />
                     </div>
                     <div class="controls">
-                        <input placeholder="Area" type="text" class="floatLabel" name="area" onChange={e => setArea(e.target.value)} />
+                        <input id="search-bar" placeholder="Area" type="text" className="floatLabel mb-3" name="area" onChange={e => setArea(e.target.value)} />
                     </div>
                     <div class="controls">
-                        <input placeholder="Coordinates" type="text" class="floatLabel" name="coordinates" onChange={e => setCoordinates(e.target.value)} />
+                        <input id="search-bar" placeholder="Coordinates" type="text" className="floatLabel mb-3" name="coordinates" onChange={e => setCoordinates(e.target.value)} />
                     </div>
                     <div className="controls">
-                        <input type="submit" title="Submit" className="btn btn-primary btn-lg float-end" />
+                        <input type="submit" title="Submit" className="btn btn-outline-primary button-border-purp btn-lg float-end" value="Create" />
                     </div>
                 </div>
             </form>

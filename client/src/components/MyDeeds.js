@@ -7,18 +7,29 @@ function MyDeeds() {
 
     const [imgList, setImgList] = useState([]);
     const [idList, setIdList] = useState([]);
+    const [price, setPrice] = useState("");
+    const [isCalled, setIsCalled] = useState(false);
 
     const getDeeds = async () => {
         let deeds = await getUserDeeds();
         if (deeds != undefined) {
             setImgList(deeds[0]);
             setIdList(deeds[1]);
+            setIsCalled(true);
         }
     }
 
+    useEffect(() => {
+        if (!isCalled) {
+            let ignore = false;
+        
+            if (!ignore)  getDeeds()
+            return () => { ignore = true; }
+        }
+    });
     return(
         <div className="container">
-            <button onClick={() => {getDeeds()}}>test</button>
+            <h2 class="heading">My Deeds</h2>
             <div className="row">
             {
                 imgList.map((image, index) => {
@@ -35,11 +46,12 @@ function MyDeeds() {
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <input className="form-control mt-3 mb-3" type="number" step="0.01" min="0" />
+                                        Price (ETH)
+                                        <input onChange={(e) => setPrice(e.target.value)} className="form-control mt-3 mb-3" type="number" step="0.01" min="0" placeholder="0.1 ETH"/>
                                     </div>
                                     <div class="modal-footer">
-                                        <button onClick={() => approveToken(idList[index])} type="button" class="btn btn-secondary" data-bs-dismiss="modal">Approve</button>
-                                        <button onClick={() => putOnSale(idList[index])} type="button" class="btn btn-primary">Put On Sale</button>
+                                        {/*<button onClick={() => approveToken(idList[index])} type="button" class="btn btn-secondary" data-bs-dismiss="modal">Approve</button>*/}
+                                        <button onClick={() => putOnSale(idList[index], price)} type="button" class="btn btn-primary">Put On Sale</button>
                                     </div>
                                     </div>
                                 </div>

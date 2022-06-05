@@ -28,8 +28,8 @@ function SearchDeed() {
         else { setForSale("Not For Sale") }
     }
 
-    const getTransactions = async () => {
-        const e = await getPastTransactions()
+    const getTransactions = async (id) => {
+        const e = await getPastTransactions(id)
         const list = [];
         for (let index = 0; index < e.length; index++) {
             var dateObj = new Date(parseInt(e[index].returnValues._timestamp));
@@ -48,7 +48,7 @@ function SearchDeed() {
 
     return(
         <div className="container">
-            <form className="" onSubmit={(e) => {e.preventDefault(); getTransactions();setIsSearched(true); getImage(input); getSaleInfo(input)}}>                
+            <form className="" onSubmit={(e) => {e.preventDefault(); getTransactions(input);setIsSearched(true); getImage(input); getSaleInfo(input)}}>                
                 <div className="row mt-5">
                     <div className="col-md-10 pe-0">
                         <input type="number" id="search-bar" placeholder="ID" min="1" className="float-start" onChange={(e) => setInput(e.target.value)} />
@@ -58,7 +58,7 @@ function SearchDeed() {
                     </div>
                 </div>
             </form>
-            <hr />
+            <hr style={{"borderColor": "#3c4250", "opacity": "1"}}/>
             <div className={isSearched ? "d-block" : "d-none"}>
                 <img style={{"width": "330px"}} src={imgSource} className="mx-auto d-block" />
                 <div className="row mt-4">
@@ -73,6 +73,36 @@ function SearchDeed() {
                         </div>
                     </div>
                 </div>
+                {
+                    forSale == "For Sale" ? 
+                    <div>
+                        <div className="row mt-2">
+                            <div className="col-md-6">
+                                <div className="th">
+                                    Buy
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="tc">
+                                    <button className="btn btn-outline-primary button-border-purp" onClick={() => {buyTitleDeed(input, price);}}>Buy</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row mt-2">
+                        <div className="col-md-6">
+                            <div className="th">
+                                Price
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <div className="tc">
+                                { Web3.utils.fromWei(price, 'ether') } ETH
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    : <small></small>
+                }
                 <div className="row mt-2">
                     <div className="col-md-6">
                         <div className="th">
@@ -92,6 +122,7 @@ function SearchDeed() {
                             Previous Purchases
                         </div>
                     </div>
+                    { events.length ? 
                     <div className="col-md-12">
                         <div className="tc">
                             <table class="rwd-table mx-auto">
@@ -116,11 +147,9 @@ function SearchDeed() {
                             </table>
                         </div>
                     </div>
-                </div>
-                <div className={forSale ? "d-block" : "d-none"}>
-                    Price: { price }
-                    Owner: { owner }
-                    <button onClick={() => {buyTitleDeed(input, price);}}>Buy</button>
+                    :
+                    <p style={{"textAlign": "center"}}>Not Found</p>
+                    }
                 </div>
             </div>
         </div>

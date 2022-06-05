@@ -13,7 +13,7 @@ function Navbar() {
                     <span></span>
                 </button>
                 <a href="#">
-                    <h4>Awesome<span>logo</span></h4>
+                    <h4>Deed<span>NFT</span></h4>
                 </a>
                 </div>
 
